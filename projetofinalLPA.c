@@ -21,9 +21,14 @@ void limpezaBuffer(void)
     while ((c = getchar()) != '\n' && c != EOF){
     }
 }
+/*Função principal:*/
+    int main(){
+    /*Declaracao da variavel responsavel por registrar o numero escrito pelo usuario para o programa rodar o que o usuario quer fazer*/
+        int opcao;
 
-void menuPrincipal(void){ /*Escreve o menu principal na tela do usuario*/
-    printf("\nSistema escolar de notas: \n");
+    /*Escreve o menu principal na tela do usuario em forma de laço, enquanto o usuario não escrever o 7 o programa vai rodando.*/
+
+    do{printf("\nSistema escolar de notas: \n");
     printf("1 - Cadastrar aluno\n");
     printf("2 - Listar alunos\n");
     printf("3 - Buscar aluno\n");
@@ -32,7 +37,27 @@ void menuPrincipal(void){ /*Escreve o menu principal na tela do usuario*/
     printf("6 - Gerar um relatorio\n");
     printf("7 - Sair\n");
     printf("Escolha uma opcao: ");
-}
-    int main(){
-
+    scanf("%d", &opcao);
+    }while(opcao != 7);
+/*Menu switch, a variável opção define qual 'case' estará sendo executada e o default informa o usuário do erro cometido.*/
+    switch(opcao){
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        default:
+            printf("\nOpcao invalida, digite uma opcao valida:\n ");
+            scanf("%d", &opcao);
     }
+
+}
