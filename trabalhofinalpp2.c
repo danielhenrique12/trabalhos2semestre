@@ -11,6 +11,7 @@
 		int opcao = -1;
 		int sessao;
 		int assento;
+		int reservado = 0;
 	
 	do{
 	
