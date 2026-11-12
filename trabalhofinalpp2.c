@@ -1,6 +1,11 @@
 #include <stdio.h>
 	int main(){
-		int assentos[5][5];
+		int assentos[3][5] = {
+		{0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0}
+		};
+		int linhas, fileiras;
 		int opcao = -1;
 	
 	while (opcao != 0){
@@ -16,7 +21,13 @@
 	
 	switch(opcao){
 		case 1:
-			printf("");
+			printf("Mapa dos assentos: \n");
+			for(linhas = 0; linhas < 3; linhas++){
+				for(fileiras = 0; fileiras < 5; fileiras++){
+				printf("%4d", assentos[3][5]);
+				}
+				printf("\n");
+			}
 			break;
 		
 		case 2: 
