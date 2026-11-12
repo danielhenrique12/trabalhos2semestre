@@ -34,7 +34,7 @@
 			break;
 			
 		default:
-			printf("Opcao nao encontrada");
+			printf("Opcao invalida");
 			break;
 	}
 	}
