@@ -5,6 +5,8 @@
 		{0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0}
 		};
+		int vetorMapa[5] = {1, 2, 3, 4, 5};
+		int mapa;
 		int linhas, fileiras;
 		int opcao = -1;
 		int sessao;
