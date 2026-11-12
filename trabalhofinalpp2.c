@@ -12,7 +12,7 @@
 		int sessao;
 		int assento;
 	
-	while (opcao != 0){
+	do{
 	
 		printf("\n===MENU===\n");
 		printf("1 - Mostrar mapa de assentos\n");
@@ -62,5 +62,5 @@
 			printf("Opcao nao encontrada");
 			break;
 		}
-	}
+	} while (opcao != 0);
 	}
