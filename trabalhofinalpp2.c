@@ -52,7 +52,7 @@
 				printf("Assento reservado, insira uma sessao e/ou um numero de assento: \n")
 			}
 			else{
-			assentos[linhas][colunas] = 1;
+			assentos[linhas][fileiras] = 1;
 			reservado = 1;
 			}
 		else{
