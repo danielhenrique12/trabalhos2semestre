@@ -23,13 +23,21 @@
 	
 	switch(opcao){
 		case 1:
-			printf("Mapa dos assentos: \n");
-			for(linhas = 0; linhas < 3; linhas++){
-				for(fileiras = 0; fileiras < 5; fileiras++){
-				printf("%4d", assentos[3][5]);
-				}
-				printf("\n");
+		printf("Mapa dos assentos: \n");
+		printf("Assentos:");
+			for(mapa = 0; mapa < 5; mapa++){
+		printf("%4d", vetorMapa[5] + (mapa+1));
 			}
+			printf("\n");
+		for(linhas = 0; linhas < 3; linhas++){
+			for(fileiras = 0; fileiras < 5; fileiras++){
+				if(fileiras == 0){
+					printf("Sessao %d:", linhas + 1);
+				}
+				printf("%4d", assentos[3][5]);
+			}
+			printf("\n");
+		}
 			break;
 		
 		case 2: 
