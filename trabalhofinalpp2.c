@@ -7,6 +7,8 @@
 		};
 		int linhas, fileiras;
 		int opcao = -1;
+		int sessao;
+		int assento;
 	
 	while (opcao != 0){
 	
@@ -43,7 +45,7 @@
 			break;
 			
 		case 0:
-			printf("Encerrar");
+			printf("Encerrado");
 			break;
 			
 		default:
