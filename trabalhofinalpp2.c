@@ -46,15 +46,18 @@
 		case 2: 
 			while(reservado == 0){
 		printf("\nDigite a sessao e o numero do assento desejado: ");
-		scanf("%d %d", &linhas, &colunas);
-		if(linhas<=3 && linhas>0 && colunas <= 5 && colunas > 0){
-			if(assentos[linhas][colunas] == 1){
-				
+		scanf("%d %d", &linhas, &fileiras);
+		if(linhas<=3 && linhas>0 && fileiras <= 5 && fileiras > 0){
+			if(assentos[linhas][fileiras] == 1){
+				printf("Assento reservado, insira uma sessao e/ou um numero de assento: \n")
 			}
 			else{
 			assentos[linhas][colunas] = 1;
 			reservado = 1;
 			}
+		else{
+			printf("\nNumero de sessao ou de assento invalidos, tente novamente: ");
+		}
 		}
 		}
 			break;
