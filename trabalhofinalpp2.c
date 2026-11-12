@@ -1,7 +1,7 @@
 #include <stdio.h>
 	int main(){
 		int assentos[5][5];
-	int opcao = -1;
+		int opcao = -1;
 	
 	while (opcao != 0){
 	
