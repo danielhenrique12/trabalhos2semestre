@@ -1,4 +1,3 @@
- 
 #include <stdio.h> /*Biblioteca principal da linguagem*/
 #include <stdlib.h> /*Biblioteca para memoria dinamica*/
 #include <string.h> /*Biblioteca para buscar nomes e validar textos*/
@@ -130,9 +129,21 @@ void carregarAlunos(ALUNO **alunos, int *qtd, int *capacidade){
             }
         }
     }
+/*Funcao simples de listagem de alunos que gera um loop que percorre cada posicao do vetor alunos e
+escreve tudo na tela*/
+    void listarAlunos(ALUNO alunos[], int qtd){
 
-    fclose(arquivo);
-    printf("%d aluno(s) carregado(s).\n", *qtd);
+        for(int i = 0; i < qtd; i++){
+
+            printf("\nNome do aluno %d: %s", alunos[i].nome);
+            printf("\nCurso: %s", alunos[i].curso);
+            printf("\nMatricula: %d", alunos[i].matricula);
+            printf("\nPrimeira nota: %.2f", alunos[i].n1);
+            printf("\nSegunda nota: %.2f", alunos[i].n2);
+            printf("\nFrequencia: %.2f", alunos[i].frequencia);
+            printf("\nMedia: %.2f\n", calcularMedia(alunos[i].n1, alunos[i].n2));
+
+        }
 }
 
 /*Função principal:*/
@@ -181,8 +192,10 @@ void carregarAlunos(ALUNO **alunos, int *qtd, int *capacidade){
 
             break;
         case 2:
+            listarAlunos(alunos, qtd);
             break;
         case 3:
+            
             break;
         case 4:
             break;
