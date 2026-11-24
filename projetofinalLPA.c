@@ -1,3 +1,4 @@
+ 
 #include <stdio.h> /*Biblioteca principal da linguagem*/
 #include <stdlib.h> /*Biblioteca para memoria dinamica*/
 #include <string.h> /*Biblioteca para buscar nomes e validar textos*/
@@ -16,6 +17,7 @@ typedef struct{
     int matricula;
     float n1;
     float n2;
+    float frequencia; /*Frequencia do aluno*/
 }ALUNO;
 
 /* Função que descarta o "\n" apos o usuario escrever e apertar o enter, para que o arquivo nao armazene lixo, é a limpeza do buffer, 
@@ -73,17 +75,66 @@ void preencherCadastro(ALUNO alunos[], int *qtd, FILE *arquivo){
 
             }while(alunos[*qtd].n2 < 0 || alunos[*qtd].n2 > 10);
 
+            printf("Digite a frequencia: ");
+            scanf("%f", &alunos[*qtd].frequencia);
+
             printf("\nAluno cadastrado com sucesso. ");
 
             fprintf(arquivo,"%s;", alunos[*qtd].nome);
 	        fprintf(arquivo,"%s;", alunos[*qtd].curso);
 	        fprintf(arquivo,"%d;", alunos[*qtd].matricula);
             fprintf(arquivo,"%f;", alunos[*qtd].n1);
-            fprintf(arquivo,"%f\n", alunos[*qtd].n2);
+            fprintf(arquivo,"%f;", alunos[*qtd].n2);
+            fprintf(arquivo,"%f\n", alunos[*qtd].frequencia);
 
             (*qtd)++;
 
 }
+
+/* Le o arquivo alunos.txt ao iniciar o programa e carrega os registros no vetor.
+   Recebe o vetor, a quantidade e a capacidade por ponteiro porque a funcao altera
+   a quantidade e, quando o item 2 fizer o vetor crescer, tambem o vetor e a capacidade.
+   Formato de cada linha: nome;curso;matricula;n1;n2;frequencia
+   Se o arquivo nao existir, avisa e deixa o vetor vazio (o programa nao trava). */
+void carregarAlunos(ALUNO **alunos, int *qtd, int *capacidade){
+    FILE *arquivo = fopen("alunos.txt", "r");
+    char linha[256];
+    ALUNO temp;
+
+    if (arquivo == NULL){
+        printf("Arquivo alunos.txt nao encontrado. Iniciando com lista vazia.\n");
+        return;
+    }
+
+    while (fgets(linha, sizeof(linha), arquivo) != NULL){
+        /*Linha em branco nao e registro: so processa se a linha tiver conteudo*/
+        if (linha[0] != '\n'){
+
+            /*sscanf devolve quantos campos leu; se forem 6, a linha esta correta*/
+            if (sscanf(linha, "%50[^;];%30[^;];%d;%f;%f;%f",
+                       temp.nome, temp.curso, &temp.matricula,
+                       &temp.n1, &temp.n2, &temp.frequencia) == 6){
+
+                /*Vetor cheio: o crescimento do vetor (realloc) e do item 2 (Andre).
+                  Ate la, a leitura para aqui para nao escrever fora da memoria.*/
+                if (*qtd == *capacidade){
+                    printf("Vetor cheio: registros restantes nao foram carregados.\n");
+                    break;
+                }
+
+                (*alunos)[*qtd] = temp;
+                (*qtd)++;
+            }
+            else{
+                printf("Linha ignorada (formato invalido): %s", linha);
+            }
+        }
+    }
+
+    fclose(arquivo);
+    printf("%d aluno(s) carregado(s).\n", *qtd);
+}
+
 /*Função principal:*/
     int main(){
         int opcao; /*Declaracao da variavel responsavel por registrar o numero escrito pelo usuario para o programa rodar o que o usuario quer fazer*/
@@ -92,6 +143,9 @@ void preencherCadastro(ALUNO alunos[], int *qtd, FILE *arquivo){
         int capacidade = 5; /*Variavel que armazena a quantidade inicial do vetor*/
         ALUNO *alunos = malloc(capacidade * sizeof(ALUNO)); /*malloc reserva memoria para o registro das informacoes*/
         FILE *arquivo = NULL; /*Declara um ponteiro do tipo FILE e inicializa com NULL*/
+
+        /*Carrega os alunos ja gravados no arquivo para a memoria*/
+        carregarAlunos(&alunos, &qtd, &capacidade);
 
 /*Escreve o menu principal na tela do usuario em forma de laço, enquanto o usuario não escrever o 7 o programa vai rodando.*/
 
@@ -104,7 +158,11 @@ void preencherCadastro(ALUNO alunos[], int *qtd, FILE *arquivo){
     printf("6 - Gerar relatorio\n");
     printf("7 - Sair\n");
     printf("Escolha uma opcao: ");
-    scanf("%d", &opcao);
+    /*Se o usuario digitar algo que nao e numero, o scanf devolve 0: limpa o buffer e cai no default*/
+    if (scanf("%d", &opcao) != 1){
+        limpezaBuffer();
+        opcao = 0;
+    }
 
 /*Menu switch, a variável opcao define qual 'case' estará sendo executada e o default informa o usuário do erro cometido.*/
     switch(opcao){
@@ -139,4 +197,4 @@ void preencherCadastro(ALUNO alunos[], int *qtd, FILE *arquivo){
     }
     }while(opcao != 7);
 }
-
+     
