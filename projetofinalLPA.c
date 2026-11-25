@@ -494,6 +494,7 @@ void excluirAluno(ALUNO alunos[], int *qtd){
             excluirAluno(alunos, &qtd);
             break;
         case 6:
+			gerarRelatorio(alunos, qtd);
             break;
         case 7:
             break;
