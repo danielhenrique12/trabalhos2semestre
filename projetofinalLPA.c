@@ -426,6 +426,85 @@ void excluirAluno(ALUNO alunos[], int *qtd){
         }
 }
 
+// RELATORIO 
+
+/*Escreve o relatorio em "saida": se for stdout aparece na tela,
+se for um arquivo grava nele. O conteudo e igual nos dois*/
+void imprimirRelatorio(FILE *saida, ALUNO alunos[], int qtd){
+
+    float media;
+    float soma= 0;
+    float mediaGeral= 0;
+    float maior = 0;
+    float menor = 0;
+
+    //Pega a data e a hora atuais
+    time_t agora = time(NULL);
+    struct tm *data = localtime(&agora);
+
+    /*Estatisticas: percorre os alunos somando as medias e guardando a maior e a menor*/
+    for(int i = 0; i < qtd; i++){
+
+        media = calcularMedia(alunos[i].n1, alunos[i].n2);
+        soma += media;
+
+        if(i == 0 || media > maior){
+            maior = media;
+        }
+        if(i == 0 || media < menor){
+            menor = media;
+        }
+    }
+
+    if(qtd > 0){
+        mediaGeral = soma / qtd;
+    }
+
+    /*Cabecalho*/
+    fprintf(saida, "\n======= RELATORIO =======\n");
+    fprintf(saida, "Data: %02d/%02d/%04d\n\n", data->tm_mday, data->tm_mon + 1, data->tm_year + 1900);
+
+    /*Tabela*/
+    fprintf(saida, "%-10s %-25s %-8s %-8s\n", "Matricula", "Nome", "Media", "Freq");
+    fprintf(saida, "--------------------------------------------------------\n");
+
+    for(int i = 0; i < qtd; i++){
+        fprintf(saida, "%-10d %-25.25s %-8.2f %-8.1f\n",
+                alunos[i].matricula, alunos[i].nome,
+                calcularMedia(alunos[i].n1, alunos[i].n2), alunos[i].frequencia);
+    }
+
+    fprintf(saida, "--------------------------------------------------------\n\n");
+
+    /*Estatisticas*/
+    fprintf(saida, "Total de alunos: %d\n", qtd);
+    fprintf(saida, "Media geral:     %.2f\n", mediaGeral);
+    fprintf(saida, "Maior media:     %.2f\n", maior);
+    fprintf(saida, "Menor media:     %.2f\n", menor);
+
+    /*Rodape*/
+    fprintf(saida, "\n======= Fim do relatorio =======\n");
+}
+
+/*Gera o relatorio.txt e mostra na tela*/
+void gerarRelatorio(ALUNO alunos[], int qtd){
+
+    FILE *arquivo = fopen("relatorio.txt", "w");
+
+    if(arquivo == NULL){
+        printf("Erro ao criar o arquivo relatorio.txt\n");
+        return;
+    }
+
+    imprimirRelatorio(arquivo, alunos, qtd); //grava no arquivo
+    imprimirRelatorio(stdout, alunos, qtd);  //mostra na tela
+
+    fclose(arquivo);
+
+    printf("\nRelatorio gerado com sucesso!\n");
+}
+
+
 /*Função principal:*/
     int main(){
 
