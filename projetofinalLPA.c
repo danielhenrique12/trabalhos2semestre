@@ -32,7 +32,9 @@ void limpezaBuffer(void){
 /*Funcao para preencher o cadastro, utilizado ao selecionar a opcao 1*/
 
 void preencherCadastro(ALUNO alunos[], int *qtd, FILE *arquivo){
-    int validacao;
+
+    int validacao; /*Variavel que valida o cadastro*/
+
             printf("\nCadastro de alunos: ");
 
             limpezaBuffer();
@@ -110,8 +112,93 @@ void preencherCadastro(ALUNO alunos[], int *qtd, FILE *arquivo){
             fprintf(arquivo,"%f;", alunos[*qtd].n2);
             fprintf(arquivo,"%f\n", alunos[*qtd].frequencia);
 
-            (*qtd)++;
+            (*qtd)++; /*Realiza a contagem dos alunos definndo seus lugares no vetor sem que substitua o anterior*/
 
+}
+/*Funcao para buscar o aluno pela matricula ou pelo nome*/
+void buscarAlunos(ALUNO alunos[], int qtd){
+
+    int opcao; /*Define se a busca vai ser por matricula ou por nome*/
+    int matricula; /*Recebe a matricula digitada para comparar com a matricula registrada*/
+    int encontrado = 0; /*Validador que retorna 1 se o aluno for encontrado e 0 caso nao seja*/
+    char nome[51]; /*Recebe o nome digitado para comparar com o nome registrado*/
+    int iguais; /*Variavel que encontra a semelhanca entre o que foi digitado e o que foi registrado retornando 1, caso seja diferente ele retorna 0*/
+
+        printf("\nBuscar aluno:\n");
+        printf("1 - Buscar pela matricula\n");
+        printf("2 - Buscar pelo nome\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+    if(opcao == 1){
+
+        printf("Digite a matricula: ");
+        scanf("%d", &matricula);
+
+        for(int i = 0; i < qtd; i++){ /*Loop que percorre matricula por matricula ate encontrar uma igual e retornar 1 com as informacoes*/
+
+            if(alunos[i].matricula == matricula){
+
+                encontrado = 1;
+
+                printf("\nAluno encontrado!\n");
+                printf("Nome: %s\n", alunos[i].nome);
+                printf("Curso: %s\n", alunos[i].curso);
+                printf("Matricula: %d\n", alunos[i].matricula);
+                printf("Primeira nota: %.2f\n", alunos[i].n1);
+                printf("Segunda nota: %.2f\n", alunos[i].n2);
+                printf("Frequencia: %.2f\n", alunos[i].frequencia);
+                printf("Media: %.2f\n", calcularMedia(alunos[i].n1, alunos[i].n2));
+
+                break;
+            }
+        }
+    }
+    else if(opcao == 2){
+
+        limpezaBuffer();
+
+        printf("Digite o nome: ");
+        scanf("%50[^\n]", nome);
+
+        for(int i = 0; i < qtd; i++){ /*Loop que percorre os nomes ate encontrar um igual e retornar 1 caso tenha encontrado*/
+
+            iguais = 1;
+
+        for(int j = 0; nome[j] != '\0' || alunos[i].nome[j] != '\0'; j++){ 
+
+            if(nome[j] != alunos[i].nome[j]){
+                iguais = 0;
+                break;
+            }
+        }
+
+        if(iguais == 1){
+
+                encontrado = 1;
+
+                printf("\nAluno encontrado!\n");
+                printf("Nome: %s\n", alunos[i].nome);
+                printf("Curso: %s\n", alunos[i].curso);
+                printf("Matricula: %d\n", alunos[i].matricula);
+                printf("Primeira nota: %.2f\n", alunos[i].n1);
+                printf("Segunda nota: %.2f\n", alunos[i].n2);
+                printf("Frequencia: %.2f\n", alunos[i].frequencia);
+                printf("Media: %.2f\n", calcularMedia(alunos[i].n1, alunos[i].n2));
+            }
+        }
+    }
+    else{
+
+        printf("Opcao invalida!\n");
+        return;
+    }
+
+    if(encontrado == 0){
+
+        printf("Aluno nao encontrado!\n");
+
+    }
 }
 
 /* Le o arquivo alunos.txt ao iniciar o programa e carrega os registros no vetor.
@@ -162,7 +249,7 @@ escreve tudo na tela*/
 
         for(int i = 0; i < qtd; i++){
 
-            printf("\nNome do aluno %d: %s", i, alunos[i].nome);
+            printf("\nNome do aluno %d: %s", i+1, alunos[i].nome);
             printf("\nCurso: %s", alunos[i].curso);
             printf("\nMatricula: %d", alunos[i].matricula);
             printf("\nPrimeira nota: %.2f", alunos[i].n1);
@@ -175,24 +262,24 @@ escreve tudo na tela*/
 /*Funcao para alterar o cadastro dos alunos, semelhante a de cadastrar, mas com*/
     void alterarAlunos(ALUNO alunos[], int qtd){
 
-        int indice;
-        int matriculaNova;
-        int validacao;
+        int indice; /*Variavel que encontra o aluno a ser alterado */
+        int matriculaNova; /*Variavel que recebe a nova matricula*/
+        int validacao; /*Variavel que encerra o loop caso a matricula nova seja valida*/
 
         FILE *arquivo;
 
             printf("Digite o indice do aluno que deseja alterar: ");
             scanf("%d", &indice);
 
-        if(indice < 0 || indice >= qtd){
+        if(indice < 0 || indice >= qtd){ /*Condicao para validar o indice*/
 
-            printf("Indice invalido!\n");
+            printf("Indice invalido!\n"); 
             return;
 
         }
 
             limpezaBuffer();
-
+            /*Mesmo registro do cadastro com as mesmas condicoes*/
             printf("Digite nome correto: ");
             scanf("%50[^\n]", alunos[indice].nome);
 
@@ -201,14 +288,14 @@ escreve tudo na tela*/
             printf("Digite o curso correto: ");
             scanf("%30[^\n]", alunos[indice].curso);
 
-            do{
+            do{ 
 
                 validacao = 0;
 
                 printf("Digite a matricula correta: ");
                 scanf("%d", &matriculaNova);
 
-                for(int i = 0; i < qtd; i++){
+                for(int i = 0; i < qtd; i++){ 
 
                     if(i != indice && alunos[i].matricula == matriculaNova){
                         validacao = 1;
@@ -220,7 +307,7 @@ escreve tudo na tela*/
 
             alunos[indice].matricula = matriculaNova;
 
-            do{
+            do{ 
             printf("Digite a primeira nota (0 a 10): ");
             scanf("%f", &alunos[indice].n1);
 
@@ -252,14 +339,14 @@ escreve tudo na tela*/
 
             }while(alunos[indice].frequencia < 0 || alunos[indice].frequencia > 100);
 
-            arquivo = fopen("alunos.txt", "w");
+            arquivo = fopen("alunos.txt", "w"); /*reescreve o arquivo com as informacoes novas*/
 
         if(arquivo == NULL){
             printf("Erro ao abrir o arquivo!\n");
             return;
         }
 
-        for(int i = 0; i < qtd; i++){
+        for(int i = 0; i < qtd; i++){ /*Loop que reescreve todas as informacoes ja contendo as informacoes alteradas*/
 
             fprintf(arquivo, "%s;", alunos[i].nome);
             fprintf(arquivo, "%s;", alunos[i].curso);
@@ -273,6 +360,70 @@ escreve tudo na tela*/
             fclose(arquivo);
 
             printf("Aluno alterado com sucesso.\n");
+}
+/*Funcao para excluir um registro*/
+void excluirAluno(ALUNO alunos[], int *qtd){
+
+    int matricula; /*Recebe a matricula que encontra o aluno a ser excluido*/
+    int encontrado = 0; /*Mesma logica da busca, se encontrar o aluno ele valida a operacao */
+    char confirmacao; /*Confirma se o usuario realmente quer excluir o aluno*/
+
+    FILE *arquivo;
+
+        printf("Digite a matricula do aluno que deseja excluir: ");
+        scanf("%d", &matricula);
+
+        for(int i = 0; i < *qtd; i++){ /*loop para percorrer os alunos um por um dentro da quantidade*/
+
+            if(alunos[i].matricula == matricula){
+
+                encontrado = 1;
+
+                printf("Tem certeza que quer excluir esse aluno? (S/N): ");
+                scanf(" %c", &confirmacao);
+
+                if(confirmacao == 'S' || confirmacao == 's'){
+                    /*Loop que percorre alunos para deslocar os alunos posteriores ao que foi 
+                        excluido para as suas respectivas posicoes anteriores*/
+                    for(int j = i; j < *qtd - 1; j++){ 
+                            alunos[j] = alunos[j + 1];
+                    }
+
+                    (*qtd)--; /*Diminui a quantidade de alunos registrados toda vez que um aluno e excluido*/
+
+                    arquivo = fopen("alunos.txt", "w");
+
+                    if(arquivo == NULL){
+                        printf("Erro ao abrir o arquivo!\n");
+                        return;
+                    }
+
+                    for(int j = 0; j < *qtd; j++){
+
+                        fprintf(arquivo, "%s;", alunos[j].nome);
+                        fprintf(arquivo, "%s;", alunos[j].curso);
+                        fprintf(arquivo, "%d;", alunos[j].matricula);
+                        fprintf(arquivo, "%f;", alunos[j].n1);
+                        fprintf(arquivo, "%f;", alunos[j].n2);
+                        fprintf(arquivo, "%f\n", alunos[j].frequencia);
+
+                    }
+
+                    fclose(arquivo);
+
+                    printf("Aluno excluido com sucesso!\n");
+
+                }
+                else{
+                    printf("Exclusao cancelada.\n");
+                }
+                break;
+            }
+        }
+
+        if(encontrado == 0){
+            printf("Aluno nao encontrado!\n");
+        }
 }
 
 /*Função principal:*/
@@ -334,12 +485,13 @@ escreve tudo na tela*/
             listarAlunos(alunos, qtd);
             break;
         case 3:
-            
+            buscarAlunos(alunos, qtd);
             break;
         case 4:
             alterarAlunos(alunos, qtd);
             break;
         case 5:
+            excluirAluno(alunos, &qtd);
             break;
         case 6:
             break;
@@ -351,4 +503,3 @@ escreve tudo na tela*/
     }while(opcao != 7);
     free(alunos);
 }
-     
