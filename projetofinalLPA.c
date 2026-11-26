@@ -2,6 +2,8 @@
 #include <stdlib.h> /*Biblioteca para memoria dinamica*/
 #include <string.h> /*Biblioteca para buscar nomes e validar textos*/
 #include <time.h> /*Biblioteca para adicionar data e hora nos arquivos*/
+#include <limits.h> /*Limite de capacidade*/
+#include <stdint.h> /*SIZE_MAX*/
 
 /*Função para calculo de media*/
     float calcularMedia(float n1, float n2){
@@ -27,6 +29,31 @@ void limpezaBuffer(void){
     int c;
     while ((c = getchar()) != '\n' && c != EOF){
     }
+}
+
+/* Item 2 - Alocacao dinamica: aumenta o vetor somente quando estiver cheio. */
+int garantirCapacidade(ALUNO **alunos, int qtd, int *capacidade){
+    if(qtd < *capacidade){
+        return 1;
+    }
+
+    /* Evita estouro ao dobrar a capacidade e calcular os bytes. */
+    if(*capacidade <= 0 || *capacidade > INT_MAX / 2 ||
+       (size_t)(*capacidade) > SIZE_MAX / (2 * sizeof(ALUNO))){
+        printf("Nao e possivel aumentar a capacidade.\n");
+        return 0;
+    }
+
+    int novaCapacidade = *capacidade * 2;
+    ALUNO *temporario = realloc(*alunos, (size_t)novaCapacidade * sizeof(ALUNO));
+    if(temporario == NULL){
+        printf("Erro ao aumentar a memoria.\n");
+        return 0;
+    }
+
+    *alunos = temporario;
+    *capacidade = novaCapacidade;
+    return 1;
 }
 
 /*Funcao para preencher o cadastro, utilizado ao selecionar a opcao 1*/
@@ -226,10 +253,9 @@ void carregarAlunos(ALUNO **alunos, int *qtd, int *capacidade){
                        temp.nome, temp.curso, &temp.matricula,
                        &temp.n1, &temp.n2, &temp.frequencia) == 6){
 
-                /*Vetor cheio: o crescimento do vetor (realloc) e do item 2 (Andre).
-                  Ate la, a leitura para aqui para nao escrever fora da memoria.*/
-                if (*qtd == *capacidade){
-                    printf("Vetor cheio: registros restantes nao foram carregados.\n");
+                /* Se necessario, aumenta o vetor antes de armazenar o aluno. */
+                if (!garantirCapacidade(alunos, *qtd, capacidade)){
+                    printf("Carregamento interrompido por falta de memoria.\n");
                     break;
                 }
 
@@ -546,6 +572,11 @@ void gerarRelatorio(ALUNO alunos[], int qtd){
 /*Menu switch, a variável opcao define qual 'case' estará sendo executada e o default informa o usuário do erro cometido.*/
     switch(opcao){
         case 1:
+
+            /* Pode atualizar o endereco de alunos; fazer antes de cadastrar. */
+            if(!garantirCapacidade(&alunos, qtd, &capacidade)){
+                break;
+            }
 
             arquivo = fopen("alunos.txt", "a"); /*Abre o arquivo alunos.txt para que insira novos dados de alunos no relatorio*/
 
